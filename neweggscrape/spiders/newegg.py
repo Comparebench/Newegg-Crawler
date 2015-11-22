@@ -85,7 +85,8 @@ class NeweggBoardSpider(Spider):
     name = "neweggintelboard"
     allowed_domains = ['newegg.com']
     start_urls = [
-        'http://www.newegg.com/Intel-Motherboards/SubCategory/ID-280'
+        'http://www.newegg.com/Intel-Motherboards/SubCategory/ID-280/Page-%s?Pagesize=90'
+        % page for page in xrange(1, 5)
     ]
     visitedURLs = Set()
 
@@ -113,7 +114,6 @@ class NeweggBoardSpider(Spider):
     def boardproductpage(self, response):
         specs = Selector(response).xpath('//*[@id="Specs"]/fieldset')
         itemdict = {}
-        #print specs
         for i in specs:
             test = i.xpath('dl')
             for t in test:
@@ -130,16 +130,14 @@ class NeweggBoardSpider(Spider):
             item['model'] = itemdict['Model']
             ramlist = str(itemdict['Memory Standard']).split(" ")
             ram = fnmatch.filter(ramlist, "DDR?")
-            print ram
             if ram:
                 item['ram_type'] = ram[0]
             else:
                 item['ram_type'] = None
-            if 'CPU Socket Type' in itemdict:
-                item['socket'] = str(itemdict['CPU Socket Type']).replace("Socket", "")
-            if 'Chipset' in itemdict:
-                item['chipset'] = str(itemdict['Chipset']).replace("Intel ", "")
+            item['socket'] = str(itemdict.get('CPU Socket Type', None)).replace("Socket", "")
+            item['chipset'] = str(itemdict.get('Chipset', None)).replace("Intel ", "").replace("LGA", "")
             yield item
+
 
 #  TODO: Update ram spider to jump into URL instead of getting results from search page
 class NeweggRamSpider(Spider):
@@ -272,7 +270,8 @@ class NeweggHarddriveSpider(Spider):
     name = "newegghdd"
     allowed_domains = ['newegg.com']
     start_urls = [
-        'http://www.newegg.com/All-Desktop-Hard-Drives/SubCategory/ID-14'
+        'http://www.newegg.com/All-Desktop-Hard-Drives/SubCategory/ID-14/Page-%s?Pagesize=90'
+        % page for page in xrange(1, 5)
     ]
     visitedURLs = Set()
 
@@ -338,7 +337,8 @@ class NeweggPowersupplySpider(Spider):
     name = "neweggpsu"
     allowed_domains = ['newegg.com']
     start_urls = [
-        'http://www.newegg.com/Power-Supplies/SubCategory/ID-58'
+        'http://www.newegg.com/Power-Supplies/SubCategory/ID-58/Page-%s?Pagesize=90'
+        % page for page in xrange(1, 5)
     ]
     visitedURLs = Set()
 

@@ -9,10 +9,10 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'aresscrape'
+BOT_NAME = 'Newegg-Crawler'
 
-SPIDER_MODULES = ['aresscrape.spiders']
-NEWSPIDER_MODULE = 'aresscrape.spiders'
+SPIDER_MODULES = ['neweggscrape.spiders']
+NEWSPIDER_MODULE = 'neweggscrape.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -24,7 +24,7 @@ NEWSPIDER_MODULE = 'aresscrape.spiders'
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY=3
+#DOWNLOAD_DELAY = 1
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN=16
 #CONCURRENT_REQUESTS_PER_IP=16
@@ -62,7 +62,7 @@ NEWSPIDER_MODULE = 'aresscrape.spiders'
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'aresscrape.pipelines.AresPipeline': 100,
+    'neweggscrape.pipelines.AresPipeline': 100,
     'scrapy.pipelines.images.ImagesPipeline': 1,
 }
 IMAGES_THUMBS = {

@@ -3,6 +3,9 @@ from sets import Set
 from scrapy import Spider
 from scrapy.http import Request
 from scrapy.selector import Selector
+from scrapy.spiders import Rule, CrawlSpider
+from scrapy.contrib.linkextractors import LinkExtractor
+
 from ..items import AresscrapeCPU, AresscrapeBoard, AresscrapeMemory, AresscrapeGPU, AresscrapeCase, AresscrapeStorage, \
     AresscrapePowersupply
 import timeit
@@ -12,7 +15,8 @@ class NeweggCPUSpider(Spider):
     name = "neweggcpu"
     allowed_domains = ["newegg.com"]
     start_urls = [
-        "http://www.newegg.com/Processors-Desktops/SubCategory/ID-343",
+        "http://www.newegg.com/Processors-Desktops/SubCategory/ID-343/Page-%s?Pagesize=90"
+        % page for page in xrange(1, 5)
     ]
     visitedURLs = Set()
 
@@ -67,27 +71,13 @@ class NeweggCPUSpider(Spider):
             item['make'] = itemdict['Brand']
             item['model'] = itemdict['Name']
             item['freq'] = itemdict['Operating Frequency']
-            item['turbo'] = None
-            item['die_size'] = None
-            item['lanes'] = None
-            item['threads'] = None
-            item['l2'] = None
-            item['l3'] = None
-            item['socket'] = None
-            if 'Max Turbo Frequency' in itemdict:
-                item['turbo'] = itemdict['Max Turbo Frequency']
-            if 'Manufacturing Tech' in itemdict:
-                item['die_size'] = itemdict['Manufacturing Tech']
-            if 'Max Number of PCI Express Lanes' in itemdict:
-                item['lanes'] = itemdict['Max Number of PCI Express Lanes']
-            if '# of Threads' in itemdict:
-                item['threads'] = itemdict['# of Threads']
-            if 'L2 Cache' in itemdict:
-                item['l2'] = itemdict['L2 Cache']
-            if 'L3 Cache' in itemdict:
-                item['l3'] = itemdict['L3 Cache']
-            if 'CPU Socket Type' in itemdict:
-                item['socket'] = str(itemdict['CPU Socket Type']).replace("Socket", "")
+            item['turbo'] = itemdict.get('Max Turbo Frequency', None)
+            item['die_size'] = itemdict.get('Manufacturing Tech', None)
+            item['lanes'] = itemdict.get('Max Number of PCI Express Lanes', None)
+            item['threads'] = itemdict.get('# of Threads', None)
+            item['l2'] = itemdict.get('L2 Cache', None)
+            item['l3'] = itemdict.get('L3 Cache', None)
+            item['socket'] = str(itemdict.get('CPU Socket Type', None)).replace("Socket", "").replace("LGA", "")
             yield item
 
 

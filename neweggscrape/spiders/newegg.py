@@ -38,7 +38,6 @@ class NeweggCPUSpider(Spider):
                 price2 = product.xpath('div[3]/ul/li[3]/sup/text()').extract()[0]
                 item['price'] = price1 + price2
             urls = Set([product.xpath('div[2]/div/a/@href').extract()[0]])
-            print urls
             for url in urls:
                 if url not in self.visitedURLs:
                     request = Request(url, callback=self.cpuproductpage)
@@ -48,7 +47,6 @@ class NeweggCPUSpider(Spider):
     def cpuproductpage(self, response):
         specs = Selector(response).xpath('//*[@id="Specs"]/fieldset')
         itemdict = {}
-        print specs
         for i in specs:
             test = i.xpath('dl')
             for t in test:
@@ -56,10 +54,8 @@ class NeweggCPUSpider(Spider):
                 if name == ' ':
                     name = t.xpath('dt/a/text()').extract()[0]
                 itemdict[name] = t.xpath('dd/text()').extract()[0]
-        print itemdict
         item = response.meta['item']
         image = Selector(response).xpath('//*[@id="synopsis"]/div/div/div/a/span/img/@src').extract()
-        print image
         if image:
             image = [image[0].replace("?$S300W$", "").replace("?$S300$", "")]
         # If the product doesnt have a model or brand, don't do anything with it.
@@ -77,7 +73,7 @@ class NeweggCPUSpider(Spider):
             item['threads'] = itemdict.get('# of Threads', None)
             item['l2'] = itemdict.get('L2 Cache', None)
             item['l3'] = itemdict.get('L3 Cache', None)
-            item['socket'] = str(itemdict.get('CPU Socket Type', None)).replace("Socket", "").replace("LGA", "")
+            item['socket'] = str(itemdict.get('CPU Socket Type', None)).replace("Socket", "").replace("LGA", "").strip()
             yield item
 
 
@@ -134,8 +130,8 @@ class NeweggBoardSpider(Spider):
                 item['ram_type'] = ram[0]
             else:
                 item['ram_type'] = None
-            item['socket'] = str(itemdict.get('CPU Socket Type', None)).replace("Socket", "")
-            item['chipset'] = str(itemdict.get('Chipset', None)).replace("Intel ", "").replace("LGA", "")
+            item['socket'] = str(itemdict.get('CPU Socket Type', None)).replace("Socket", "").replace("LGA", "").strip()
+            item['chipset'] = str(itemdict.get('Chipset', None)).replace("Intel ", "").strip()
             yield item
 
 

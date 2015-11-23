@@ -13,7 +13,8 @@ from scrapy.exceptions import DropItem
 class AresPipeline(object):
 
     def __init__(self):
-        self.conn = MySQLdb.connect(user=settings['MYSQL_USER'], passwd=settings['MYSQL_PASSWORD'], db=settings['MYSQL_DB'], host=settings['MYSQL_SERVER'],
+        self.conn = MySQLdb.connect(user=settings['MYSQL_USER'], passwd=settings['MYSQL_PASSWORD'],
+                                    db=settings['MYSQL_DB'], host=settings['MYSQL_SERVER'],
                                     charset="utf8", use_unicode=True)
         self.cursor = self.conn.cursor()
 
@@ -23,7 +24,6 @@ class AresPipeline(object):
             if not data:
                 valid = False
                 raise DropItem("Missing {0}!".format(data))
-        print "SPIDER: " + str(spider.name)
 
         if valid and spider.name == 'neweggcpu':
             if item['images']:
@@ -34,14 +34,10 @@ class AresPipeline(object):
             checkmodel = self.cursor.fetchall()
             if len(checkmodel) > 0:
                 checkmodel = checkmodel[0]
-                print checkmodel
                 # if scraped model is the same as the db model, and price is different, update the row
-                if checkmodel[2] == item['model'] and checkmodel[4] != str(item['price']).replace(",", ""):
+                if checkmodel[2] == item['model'] and str(checkmodel[4]) != str(item['price']).replace(",", ""):
                     self.cursor.execute("UPDATE A_CPU SET price=%s, neweggurl=%s, updated_ts=%s, image=%s WHERE cpuid=%s",
                                         ([str(item['price']).replace(",", ""), str(item['url']), datetime.datetime.now(), imageitem, checkmodel[0]]))
-                # if scraped model and price are the same as db model and price, skip
-                elif checkmodel[2] == item['model'] and checkmodel[4] == str(item['price']):
-                    print "SKIPPING"
                 # otherwise, create new row
             elif len(checkmodel) == 0:
                 self.cursor.executemany("""INSERT INTO A_CPU (make, model, price, neweggurl, socket, frequency, threads, turbo, l2, l3, die_size, lanes, created_ts, image)
@@ -68,11 +64,9 @@ class AresPipeline(object):
             if len(checkmodel) > 0:
                 checkmodel = checkmodel[0]
                 print checkmodel
-                if checkmodel[2] == item['model'] and checkmodel[4] != str(item['price']).replace(",", ""):
+                if checkmodel[2] == item['model'] and str(checkmodel[4]) != str(item['price']).replace(",", ""):
                     self.cursor.execute("UPDATE A_Motherboard SET price=%s, neweggurl=%s, updated_ts=%s WHERE mid=%s",
                                         (str(item['price']).replace(",", ""), str(item['url']), datetime.datetime.now(), checkmodel[0]))
-                elif checkmodel[2] == item['model'] and checkmodel[4] == str(item['price']).replace(",", ""):
-                    print "SKIPPING"
             elif len(checkmodel) == 0:
                 self.cursor.executemany("""INSERT INTO A_Motherboard (make, model, price, neweggurl, socket, ram_type, chipset, created_ts)
                                           VALUES (%s, %s, %s, %s, %s, %s,%s, %s)""", [(item['make'],
@@ -93,11 +87,9 @@ class AresPipeline(object):
             if len(checkmodel) > 0:
                 checkmodel = checkmodel[0]
                 print checkmodel
-                if checkmodel[7] == item['modelname'] and checkmodel[6] != str(item['price']).replace(",", ""):
+                if checkmodel[7] == item['modelname'] and str(checkmodel[6]) != str(item['price']).replace(",", ""):
                     self.cursor.execute("UPDATE A_Memory SET price=%s, neweggurl=%s, updated_ts=%s WHERE memid=%s",
                                         (str(item['price']).replace(",", ""), str(item['url']), datetime.datetime.now(), checkmodel[0]))
-                elif checkmodel[7] == item['modelname'] and checkmodel[6] == str(item['price']).replace(",", ""):
-                    print "SKIPPING"
             elif len(checkmodel) == 0:
                 self.cursor.executemany("""INSERT INTO A_Memory (make, model, price, neweggurl, gigabytes, modules, type, modelname, created_ts)
                                           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)""", [(item['make'],

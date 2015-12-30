@@ -14,11 +14,13 @@ class AresscrapeCPU(Item):
     make = Field()
     model = Field()
     url = Field()
+    newegg_sku = Field()
     price = Field()
     socket = Field()
     freq = Field()
     l2 = Field()
     l3 = Field()
+    cores = Field()
     turbo = Field()
     die_size = Field()
     lanes = Field()
@@ -27,6 +29,7 @@ class AresscrapeCPU(Item):
     created_ts = Field()
     image_urls = Field()
     images = Field()
+
 
 class AresscrapeBoard(Item):
     # define the fields for your item here like:
@@ -39,6 +42,7 @@ class AresscrapeBoard(Item):
     chipset = Field()
     ram_type = Field()
 
+
 class AresscrapeMemory(Item):
     make = Field()
     model = Field()
@@ -48,6 +52,7 @@ class AresscrapeMemory(Item):
     type = Field()
     size = Field()
     modules = Field()
+
 
 class AresscrapeGPU(Item):
     make = Field()
@@ -60,6 +65,7 @@ class AresscrapeGPU(Item):
     created_ts = Field()
     updated_ts = Field()
 
+
 class AresscrapeCase(Item):
     make = Field()
     model = Field()
@@ -68,6 +74,7 @@ class AresscrapeCase(Item):
     price = Field()
     created_ts = Field()
     updated_ts = Field()
+
 
 class AresscrapeStorage(Item):
     make = Field()
@@ -79,6 +86,7 @@ class AresscrapeStorage(Item):
     price = Field()
     created_ts = Field()
     updated_ts = Field()
+
 
 class AresscrapePowersupply(Item):
     make = Field()

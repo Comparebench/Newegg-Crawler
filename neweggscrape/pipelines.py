@@ -40,22 +40,28 @@ class AresPipeline(object):
                                         ([str(item['price']).replace(",", ""), str(item['url']), datetime.datetime.now(), imageitem, checkmodel[0]]))
                 # otherwise, create new row
             elif len(checkmodel) == 0:
-                self.cursor.executemany("""INSERT INTO A_CPU (make, model, price, neweggurl, socket, frequency, threads, turbo, l2, l3, die_size, lanes, created_ts, image)
-                                          VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", [(item['make'],
-                                                                                                           item['model'],
-                                                                                                           item['price'],
-                                                                                                           item['url'],
-                                                                                                           item['socket'],
-                                                                                                           item['freq'],
-                                                                                                           item['threads'],
-                                                                                                           item['turbo'],
-                                                                                                           item['l2'],
-                                                                                                           item['l3'],
-                                                                                                           item['die_size'],
-                                                                                                           item['lanes'],
-                                                                                                           datetime.datetime.now(),
-                                                                                                           imageitem
-                                                                                                                )])
+                self.cursor.executemany("""INSERT INTO A_CPU (make, model, price, neweggurl,
+                                                              socket, frequency, threads, turbo,
+                                                              l2, l3, die_size, lanes, newegg_sku, cores,
+                                                              created_ts, image)
+                                          VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+                                             [(item['make'],
+                                               item['model'],
+                                               item['price'],
+                                               item['url'],
+                                               item['socket'],
+                                               item['freq'],
+                                               item['threads'],
+                                               item['turbo'],
+                                               item['l2'],
+                                               item['l3'],
+                                               item['die_size'],
+                                               item['lanes'],
+                                               item['newegg_sku'],
+                                               item['cores'],
+                                               datetime.datetime.now(),
+                                               imageitem
+                                                )])
             self.conn.commit()
         elif valid and spider.name == 'neweggintelboard':
             print "board"

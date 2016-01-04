@@ -36,8 +36,8 @@ class AresPipeline(object):
                 checkmodel = checkmodel[0]
                 # if scraped model is the same as the db model, and price is different, update the row
                 if checkmodel[2] == item['model'] and str(checkmodel[4]) != str(item['price']).replace(",", ""):
-                    self.cursor.execute("UPDATE A_CPU SET price=%s, neweggurl=%s, updated_ts=%s, image=%s WHERE cpuid=%s",
-                                        ([str(item['price']).replace(",", ""), str(item['url']), datetime.datetime.now(), imageitem, checkmodel[0]]))
+                    self.cursor.execute("UPDATE A_CPU SET price=%s, updated_ts=%s, image=%s WHERE cpuid=%s",
+                                        ([str(item['price']).replace(",", ""), datetime.datetime.now(), imageitem, checkmodel[0]]))
                 # otherwise, create new row
             elif len(checkmodel) == 0:
                 self.cursor.executemany("""INSERT INTO A_CPU (make, model, price, neweggurl,
@@ -71,8 +71,8 @@ class AresPipeline(object):
                 checkmodel = checkmodel[0]
                 print checkmodel
                 if checkmodel[2] == item['model'] and str(checkmodel[4]) != str(item['price']).replace(",", ""):
-                    self.cursor.execute("UPDATE A_Motherboard SET price=%s, neweggurl=%s, updated_ts=%s WHERE mid=%s",
-                                        (str(item['price']).replace(",", ""), str(item['url']), datetime.datetime.now(), checkmodel[0]))
+                    self.cursor.execute("UPDATE A_Motherboard SET price=%s, updated_ts=%s WHERE mid=%s",
+                                        (str(item['price']).replace(",", ""), datetime.datetime.now(), checkmodel[0]))
             elif len(checkmodel) == 0:
                 self.cursor.executemany("""INSERT INTO A_Motherboard (make, model, price, neweggurl, socket, ram_type, chipset, created_ts)
                                           VALUES (%s, %s, %s, %s, %s, %s,%s, %s)""", [(item['make'],
@@ -94,8 +94,8 @@ class AresPipeline(object):
                 checkmodel = checkmodel[0]
                 print checkmodel
                 if checkmodel[7] == item['modelname'] and str(checkmodel[6]) != str(item['price']).replace(",", ""):
-                    self.cursor.execute("UPDATE A_Memory SET price=%s, neweggurl=%s, updated_ts=%s WHERE memid=%s",
-                                        (str(item['price']).replace(",", ""), str(item['url']), datetime.datetime.now(), checkmodel[0]))
+                    self.cursor.execute("UPDATE A_Memory SET price=%s, updated_ts=%s WHERE memid=%s",
+                                        (str(item['price']).replace(",", ""), datetime.datetime.now(), checkmodel[0]))
             elif len(checkmodel) == 0:
                 self.cursor.executemany("""INSERT INTO A_Memory (make, model, price, neweggurl, gigabytes, modules, type, modelname, created_ts)
                                           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)""", [(item['make'],
@@ -116,8 +116,8 @@ class AresPipeline(object):
             if len(checkmodel) > 0:
                 checkmodel = checkmodel[0]
                 if checkmodel[10] == item['modelname'] and str(checkmodel[4]) != str(item['price']).replace(",", ""):
-                    self.cursor.execute("UPDATE A_GPU SET price=%s, neweggurl=%s, updated_ts=%s WHERE gid=%s",
-                                        (str(item['price']).replace(",", ""), str(item['url']), datetime.datetime.now(), checkmodel[0]))
+                    self.cursor.execute("UPDATE A_GPU SET price=%s, updated_ts=%s WHERE gid=%s",
+                                        (str(item['price']).replace(",", ""), datetime.datetime.now(), checkmodel[0]))
 
             elif len(checkmodel) == 0:
                 self.cursor.executemany("""INSERT INTO A_GPU (make, model, price, neweggurl, ram, bus_size, modelname, created_ts)
@@ -138,8 +138,8 @@ class AresPipeline(object):
                 checkmodel = checkmodel[0]
                 print checkmodel
                 if checkmodel[7] == item['modelname'] and str(checkmodel[3]) != str(item['price']).replace(",", ""):
-                    self.cursor.execute("UPDATE A_GPU SET price=%s, neweggurl=%s, updated_ts=%s WHERE caseid=%s",
-                                        (str(item['price']).replace(",", ""), str(item['url']), datetime.datetime.now(), checkmodel[0]))
+                    self.cursor.execute("UPDATE A_GPU SET price=%s, updated_ts=%s WHERE caseid=%s",
+                                        (str(item['price']).replace(",", ""), datetime.datetime.now(), checkmodel[0]))
 
             elif len(checkmodel) == 0:
                 self.cursor.executemany("""INSERT INTO A_Case (make, model, price, neweggurl, modelname, created_ts)
@@ -159,8 +159,8 @@ class AresPipeline(object):
                 checkmodel = checkmodel[0]
                 print checkmodel
                 if checkmodel[9] == item['modelname'] and str(checkmodel[5]) != str(item['price']).replace(",", ""):
-                    self.cursor.execute("UPDATE A_Storage SET price=%s, neweggurl=%s, updated_ts=%s WHERE sid=%s",
-                                        (str(item['price']).replace(",", ""), str(item['url']), datetime.datetime.now(), checkmodel[0]))
+                    self.cursor.execute("UPDATE A_Storage SET price=%s, updated_ts=%s WHERE sid=%s",
+                                        (str(item['price']).replace(",", ""), datetime.datetime.now(), checkmodel[0]))
             elif len(checkmodel) == 0:
                 self.cursor.executemany("""INSERT INTO A_Storage (make, model, modelname, price, neweggurl, size, type, created_ts)
                                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""", [(item['make'],
@@ -181,8 +181,8 @@ class AresPipeline(object):
                 checkmodel = checkmodel[0]
                 print checkmodel
                 if checkmodel[2] == item['model'] and str(checkmodel[4]) != str(item['price']).replace(",", ""):
-                    self.cursor.execute("UPDATE A_PSU SET price=%s, neweggurl=%s, updated_ts=%s WHERE psid=%s",
-                                        (str(item['price']).replace(",", ""), str(item['url']), datetime.datetime.now(), checkmodel[0]))
+                    self.cursor.execute("UPDATE A_PSU SET price=%s, updated_ts=%s WHERE psid=%s",
+                                        (str(item['price']).replace(",", ""), datetime.datetime.now(), checkmodel[0]))
             elif len(checkmodel) == 0:
                 self.cursor.executemany("""INSERT INTO A_PSU (make, model, price, watt, neweggurl, created_ts)
                                         VALUES (%s, %s, %s, %s, %s, %s)""", [(item['make'],

@@ -64,12 +64,13 @@ class AresPipeline(object):
                                                 )])
             self.conn.commit()
         elif valid and spider.name == 'neweggintelboard':
-            print "board"
             self.cursor.execute("SELECT * FROM A_Motherboard WHERE model = %s", [item['model']])
             checkmodel = self.cursor.fetchall()
             if len(checkmodel) > 0:
                 checkmodel = checkmodel[0]
                 print checkmodel
+                if checkmodel[2] == item['model']:
+                    self.cursor.execute("UPDATE A_Motherboard SET chipset=%s, socket=%s WHERE mid=%s", (item['chipset'], item['socket'], checkmodel[0]))
                 if checkmodel[2] == item['model'] and str(checkmodel[4]) != str(item['price']).replace(",", ""):
                     self.cursor.execute("UPDATE A_Motherboard SET price=%s, updated_ts=%s WHERE mid=%s",
                                         (str(item['price']).replace(",", ""), datetime.datetime.now(), checkmodel[0]))
@@ -82,6 +83,29 @@ class AresPipeline(object):
                                                                        item['socket'],
                                                                        item['ram_type'],
                                                                        item['chipset'],
+                                                                       "Intel",
+                                                                       datetime.datetime.now(),
+                                                                       )])
+            self.conn.commit()
+
+        elif valid and spider.name == 'neweggamdboard':
+            self.cursor.execute("SELECT * FROM A_Motherboard WHERE model = %s", [item['model']])
+            checkmodel = self.cursor.fetchall()
+            if len(checkmodel) > 0:
+                checkmodel = checkmodel[0]
+                if checkmodel[2] == item['model'] and str(checkmodel[4]) != str(item['price']).replace(",", ""):
+                    self.cursor.execute("UPDATE A_Motherboard SET price=%s, updated_ts=%s WHERE mid=%s",
+                                        (str(item['price']).replace(",", ""), datetime.datetime.now(), checkmodel[0]))
+            elif len(checkmodel) == 0:
+                self.cursor.executemany("""INSERT INTO A_Motherboard (make, model, price, neweggurl, socket, ram_type, chipset, chipset_man created_ts)
+                                          VALUES (%s, %s, %s, %s, %s, %s,%s, %s)""", [(item['make'],
+                                                                       item['model'],
+                                                                       item['price'],
+                                                                       item['url'],
+                                                                       item['socket'],
+                                                                       item['ram_type'],
+                                                                       item['chipset'],
+                                                                       "AMD",
                                                                        datetime.datetime.now(),
                                                                        )])
             self.conn.commit()
@@ -171,6 +195,42 @@ class AresPipeline(object):
                                                                                       item['size'],
                                                                                       'HDD',
                                                                                       datetime.datetime.now(),
+                                                                                      )])
+            self.conn.commit()
+
+        elif valid and spider.name == 'neweggssd':
+            if item['images']:
+                imageitem = item['images'][0]['path'].replace("full/", "")
+            else:
+                imageitem = None
+            self.cursor.execute("SELECT * FROM A_Storage WHERE modelname = %s", [item['modelname']])
+            checkmodel = self.cursor.fetchall()
+            if len(checkmodel) > 0:
+                checkmodel = checkmodel[0]
+                print checkmodel
+                if checkmodel[9] == item['modelname'] and str(checkmodel[5]) != str(item['price']).replace(",", ""):
+                    self.cursor.execute("UPDATE A_Storage SET price=%s, updated_ts=%s WHERE sid=%s",
+                                        (str(item['price']).replace(",", ""), datetime.datetime.now(), checkmodel[0]))
+            elif len(checkmodel) == 0:
+                self.cursor.executemany("""INSERT INTO A_Storage (make, model, modelname, form_factor, price, neweggurl,
+                                            size, type, created_ts, image, max_seq_read, max_seq_write, k_ran_read,
+                                            k_ran_write, controller)
+                                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+                                                                                    [(item['make'],
+                                                                                      item['model'],
+                                                                                      item['modelname'],
+                                                                                      item['form_factor'],
+                                                                                      item['price'],
+                                                                                      item['url'],
+                                                                                      item['size'],
+                                                                                      'SSD',
+                                                                                      datetime.datetime.now(),
+                                                                                      imageitem,
+                                                                                      item['max_seq_read'],
+                                                                                      item['max_seq_write'],
+                                                                                      item['k_ran_read'],
+                                                                                      item['k_ran_write'],
+                                                                                      item['controller']
                                                                                       )])
             self.conn.commit()
 

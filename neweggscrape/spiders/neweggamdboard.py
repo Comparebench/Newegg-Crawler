@@ -6,11 +6,11 @@ from scrapy.selector import Selector
 from ..items import AresscrapeBoard
 
 
-class NeweggBoardSpider(Spider):
-    name = "neweggintelboard"
+class NeweggAmdBoardSpider(Spider):
+    name = "neweggamdboard"
     allowed_domains = ['newegg.com']
     start_urls = [
-        'http://www.newegg.com/Intel-Motherboards/SubCategory/ID-280/Page-%s?Pagesize=90'
+        'http://www.newegg.com/AMD-Motherboards/SubCategory/ID-22/Page-%s?Pagesize=90'
         % page for page in xrange(1, 5)
     ]
     visitedURLs = Set()
@@ -46,7 +46,6 @@ class NeweggBoardSpider(Spider):
                 if name == ' ':
                     name = t.xpath('dt/a/text()').extract()[0]
                 itemdict[name] = t.xpath('dd/text()').extract()[0]
-        print itemdict
         item = response.meta['item']
         if 'Model' not in itemdict or 'Brand' not in itemdict:
             yield None
@@ -60,5 +59,5 @@ class NeweggBoardSpider(Spider):
             else:
                 item['ram_type'] = None
             item['socket'] = str(itemdict.get('CPU Socket Type', None)).replace("Socket", "").replace("LGA", "").strip()
-            item['chipset'] = str(itemdict.get('Chipset', None)).replace("Intel ", "").strip()
+            item['chipset'] = str(itemdict.get('Chipset', None)).replace("AMD ", "").strip()
             yield item

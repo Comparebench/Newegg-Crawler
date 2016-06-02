@@ -62,8 +62,12 @@ class AresscrapeGPU(Item):
     price = Field()
     bus_size = Field()
     ram = Field()
+    freq = Field()
+    newegg_sku = Field()
     created_ts = Field()
     updated_ts = Field()
+    image_urls = Field()
+    images = Field()
 
 
 class AresscrapeCase(Item):

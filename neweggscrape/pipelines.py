@@ -68,7 +68,7 @@ class AresPipeline(object):
             checkmodel = self.cursor.fetchall()
             if len(checkmodel) > 0:
                 checkmodel = checkmodel[0]
-                print checkmodel
+                #print checkmodel
                 if checkmodel[2] == item['model']:
                     self.cursor.execute("UPDATE A_Motherboard SET chipset=%s, socket=%s WHERE mid=%s", (item['chipset'], item['socket'], checkmodel[0]))
                 if checkmodel[2] == item['model'] and str(checkmodel[4]) != str(item['price']).replace(",", ""):
@@ -111,12 +111,11 @@ class AresPipeline(object):
             self.conn.commit()
 
         elif valid and spider.name == 'neweggram':
-            print "ram"
             self.cursor.execute("SELECT * FROM A_Memory WHERE modelname = %s", [item['modelname']])
             checkmodel = self.cursor.fetchall()
             if len(checkmodel) > 0:
                 checkmodel = checkmodel[0]
-                print checkmodel
+                #print checkmodel
                 if checkmodel[7] == item['modelname'] and str(checkmodel[6]) != str(item['price']).replace(",", ""):
                     self.cursor.execute("UPDATE A_Memory SET price=%s, updated_ts=%s WHERE memid=%s",
                                         (str(item['price']).replace(",", ""), datetime.datetime.now(), checkmodel[0]))
@@ -135,6 +134,10 @@ class AresPipeline(object):
             self.conn.commit()
 
         elif valid and spider.name == 'newegggpu':
+            if item['images']:
+                imageitem = item['images'][0]['path'].replace("full/", "")
+            else:
+                imageitem = None
             self.cursor.execute("SELECT * FROM A_GPU WHERE modelname = %s", [item['modelname']])
             checkmodel = self.cursor.fetchall()
             if len(checkmodel) > 0:
@@ -144,15 +147,18 @@ class AresPipeline(object):
                                         (str(item['price']).replace(",", ""), datetime.datetime.now(), checkmodel[0]))
 
             elif len(checkmodel) == 0:
-                self.cursor.executemany("""INSERT INTO A_GPU (make, model, price, neweggurl, ram, bus_size, modelname, created_ts)
-                                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""", [(item['make'],
+                self.cursor.executemany("""INSERT INTO A_GPU (make, model, price, neweggurl, ram, bus_size, modelname, created_ts, frequency, image, newegg_sku)
+                                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""", [(item['make'],
                                                                                      item['model'],
                                                                                      str(item['price']).replace(",", ""),
                                                                                      item['url'],
                                                                                      item['ram'],
                                                                                      item['bus_size'],
                                                                                      item['modelname'],
-                                                                                      datetime.datetime.now(),
+                                                                                     datetime.datetime.now(),
+                                                                                     getattr(item, 'freq', None),
+                                                                                     imageitem,
+                                                                                     item['newegg_sku']
                                                                                       )])
             self.conn.commit()
         elif valid and spider.name == 'neweggcase':
@@ -160,9 +166,9 @@ class AresPipeline(object):
             checkmodel = self.cursor.fetchall()
             if len(checkmodel) > 0:
                 checkmodel = checkmodel[0]
-                print checkmodel
+                #print checkmodel
                 if checkmodel[7] == item['modelname'] and str(checkmodel[3]) != str(item['price']).replace(",", ""):
-                    self.cursor.execute("UPDATE A_GPU SET price=%s, updated_ts=%s WHERE caseid=%s",
+                    self.cursor.execute("UPDATE A_Case SET price=%s, updated_ts=%s WHERE caseid=%s",
                                         (str(item['price']).replace(",", ""), datetime.datetime.now(), checkmodel[0]))
 
             elif len(checkmodel) == 0:
@@ -181,7 +187,7 @@ class AresPipeline(object):
             checkmodel = self.cursor.fetchall()
             if len(checkmodel) > 0:
                 checkmodel = checkmodel[0]
-                print checkmodel
+                #print checkmodel
                 if checkmodel[9] == item['modelname'] and str(checkmodel[5]) != str(item['price']).replace(",", ""):
                     self.cursor.execute("UPDATE A_Storage SET price=%s, updated_ts=%s WHERE sid=%s",
                                         (str(item['price']).replace(",", ""), datetime.datetime.now(), checkmodel[0]))
@@ -207,7 +213,7 @@ class AresPipeline(object):
             checkmodel = self.cursor.fetchall()
             if len(checkmodel) > 0:
                 checkmodel = checkmodel[0]
-                print checkmodel
+                #print checkmodel
                 if checkmodel[9] == item['modelname'] and str(checkmodel[5]) != str(item['price']).replace(",", ""):
                     self.cursor.execute("UPDATE A_Storage SET price=%s, updated_ts=%s WHERE sid=%s",
                                         (str(item['price']).replace(",", ""), datetime.datetime.now(), checkmodel[0]))
@@ -239,7 +245,7 @@ class AresPipeline(object):
             checkmodel = self.cursor.fetchall()
             if len(checkmodel) > 0:
                 checkmodel = checkmodel[0]
-                print checkmodel
+                #print checkmodel
                 if checkmodel[2] == item['model'] and str(checkmodel[4]) != str(item['price']).replace(",", ""):
                     self.cursor.execute("UPDATE A_PSU SET price=%s, updated_ts=%s WHERE psid=%s",
                                         (str(item['price']).replace(",", ""), datetime.datetime.now(), checkmodel[0]))

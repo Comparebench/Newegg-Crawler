@@ -17,7 +17,7 @@ class NeweggCaseSpider(Spider):
             item = AresscrapeCase()
             productname = product.xpath('div[2]/div/a/span/text()').extract()[0].encode('utf-8', 'ignore')
             productnamelist = str(productname).split(' ')
-            print productnamelist
+            print(productnamelist)
             if 'Master' in productnamelist or 'WIN' in productnamelist:
                 item['make'] = productnamelist[0] + ' ' + productnamelist[1]
                 item['model'] = productnamelist[2] + ' ' + productnamelist[3]

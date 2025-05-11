@@ -1,5 +1,4 @@
 import fnmatch
-from sets import Set
 from scrapy import Spider
 from scrapy.http import Request
 from scrapy.selector import Selector
@@ -11,9 +10,9 @@ class NeweggAmdBoardSpider(Spider):
     allowed_domains = ['newegg.com']
     start_urls = [
         'http://www.newegg.com/AMD-Motherboards/SubCategory/ID-22/Page-%s?Pagesize=90'
-        % page for page in xrange(1, 5)
+        % page for page in range(1, 5)
     ]
-    visitedURLs = Set()
+    visitedURLs = set()
 
     def parse(self, response):
         products = Selector(response).xpath('//*[@class="itemCell"]')
@@ -29,7 +28,7 @@ class NeweggAmdBoardSpider(Spider):
                 price2 = product.xpath('div[3]/ul/li[3]/sup/text()').extract()[0]
                 item['price'] = price1 + price2
             urls = Set([product.xpath('div[2]/div/a/@href').extract()[0]])
-            print urls
+            print(urls)
             for url in urls:
                 if url not in self.visitedURLs:
                     request = Request(url, callback=self.boardproductpage)

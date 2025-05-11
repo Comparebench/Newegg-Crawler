@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 
 # Scrapy settings for aresscrape project
 #
@@ -10,6 +11,7 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
 BOT_NAME = 'Newegg-Crawler'
+LOG_LEVEL = 'DEBUG'
 
 SPIDER_MODULES = ['neweggscrape.spiders']
 NEWSPIDER_MODULE = 'neweggscrape.spiders'
@@ -58,6 +60,8 @@ NEWSPIDER_MODULE = 'neweggscrape.spiders'
 #EXTENSIONS = {
 #    'scrapy.telnet.TelnetConsole': None,
 #}
+# USER_AGENT = 'ComparebenchCrawler'
+HTTPERROR_ALLOWED_CODES = [400]
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
@@ -69,14 +73,16 @@ IMAGES_THUMBS = {
     'small': (50, 50), # You can add as many of these as you want
     'big': (300, 300)
 }
-IMAGES_STORE = 's3://your-s3-bucket/'
-MYSQL_SERVER = 'yourSQLserver'
-MYSQL_PORT = 3306
-MYSQL_DB = 'db'
-MYSQL_USER = 'user'
-MYSQL_PASSWORD = 'pass'
-AWS_ACCESS_KEY_ID = 'AWS ID'
-AWS_SECRET_ACCESS_KEY = 'AWS ACCESS'
+
+IMAGES_STORE = os.getenv("IMAGES_STORE")  # 's3://your-s3-bucket/'
+DB_SERVER = os.getenv("DB_SERVER")
+DB_PORT = os.getenv("DB_PORT")
+DB = os.getenv("DB")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+API_URL = os.getenv("API_URL")
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
 # NOTE: AutoThrottle will honour the standard settings for concurrency and delay

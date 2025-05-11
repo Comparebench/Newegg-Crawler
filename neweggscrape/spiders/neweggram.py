@@ -42,5 +42,5 @@ class NeweggRamSpider(Spider):
             price1 = product.xpath('div[3]/ul/li[3]/strong/text()').extract()[0]
             price2 = product.xpath('div[3]/ul/li[3]/sup/text()').extract()[0]
             item['price'] = price1 + price2
-            print productnamelist
+            print(productnamelist)
             yield item

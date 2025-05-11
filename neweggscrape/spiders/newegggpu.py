@@ -1,6 +1,5 @@
 from scrapy import Spider
 from scrapy.selector import Selector
-from sets import Set
 from ..items import AresscrapeGPU
 from scrapy.http import Request
 
@@ -10,9 +9,9 @@ class NeweggGPUSpider(Spider):
     name = "newegggpu"
     allowed_domains = ['newegg.com']
     start_urls = [
-        'http://www.newegg.com/Desktop-Memory/SubCategory/ID-48/Page-%s?Pagesize=90' % page for page in xrange(1, 5)
+        'http://www.newegg.com/Desktop-Memory/SubCategory/ID-48/Page-%s?Pagesize=90' % page for page in range(1, 5)
     ]
-    visitedURLs = Set()
+    visitedURLs = set()
 
     def parse(self, response):
         products = Selector(response).xpath('//*[@class="itemCell"]')
@@ -28,7 +27,7 @@ class NeweggGPUSpider(Spider):
                 price1 = product.xpath('div[3]/ul/li[3]/strong/text()').extract()[0]
                 price2 = product.xpath('div[3]/ul/li[3]/sup/text()').extract()[0]
                 item['price'] = price1 + price2
-            urls = Set([product.xpath('div[2]/div/a/@href').extract()[0]])
+            urls = {product.xpath('div[2]/div/a/@href').extract()[0]}
             for url in urls:
                 if url not in self.visitedURLs:
                     request = Request(url, callback=self.gpuproductpage)

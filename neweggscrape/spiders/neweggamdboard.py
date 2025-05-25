@@ -2,6 +2,8 @@ import fnmatch
 from scrapy import Spider
 from scrapy.http import Request
 from scrapy.selector import Selector
+
+from .utils import parse_product_page, parse_base_details
 from ..items import AresscrapeBoard
 
 
@@ -9,43 +11,29 @@ class NeweggAmdBoardSpider(Spider):
     name = "neweggamdboard"
     allowed_domains = ['newegg.com']
     start_urls = [
-        'http://www.newegg.com/AMD-Motherboards/SubCategory/ID-22/Page-%s?Pagesize=90'
-        % page for page in range(1, 5)
+        'https://www.newegg.com/AMD-Motherboards/SubCategory/ID-22/Page-%s?PageSize=96'
+        % page for page in range(1, 2)
     ]
     visitedURLs = set()
 
     def parse(self, response):
-        products = Selector(response).xpath('//*[@class="itemCell"]')
+        if response.status == 400:
+            print("BAD REQUEST")
+        products = Selector(response).xpath('//*[@class="item-cell"]')
         for product in products:
-            item = AresscrapeBoard()
-            item['url'] = product.xpath('div[2]/div/a/@href').extract()[0]
-            validprice = product.xpath('div[3]/ul/li[3]/strong/text()')
-            # if price isnt found (example, 'view price in cart') skip the item entirely. Fuck you newegg.
-            if not validprice:
-                continue
-            else:
-                price1 = product.xpath('div[3]/ul/li[3]/strong/text()').extract()[0]
-                price2 = product.xpath('div[3]/ul/li[3]/sup/text()').extract()[0]
-                item['price'] = price1 + price2
-            urls = Set([product.xpath('div[2]/div/a/@href').extract()[0]])
-            print(urls)
-            for url in urls:
-                if url not in self.visitedURLs:
-                    request = Request(url, callback=self.boardproductpage)
-                    request.meta['item'] = item
-                    yield request
+            parsed_item = parse_base_details(AresscrapeBoard, product)
+            if parsed_item and parsed_item["url"] not in self.visitedURLs:
+                request = Request(parsed_item["url"], callback=self.boardproductpage)
+                request.meta["item"] = parsed_item
+                yield request
 
     def boardproductpage(self, response):
-        specs = Selector(response).xpath('//*[@id="Specs"]/fieldset')
-        itemdict = {}
-        for i in specs:
-            test = i.xpath('dl')
-            for t in test:
-                name = t.xpath('dt/text()').extract()[0]
-                if name == ' ':
-                    name = t.xpath('dt/a/text()').extract()[0]
-                itemdict[name] = t.xpath('dd/text()').extract()[0]
-        item = response.meta['item']
+        itemdict = parse_product_page(response)
+        item = response.meta["item"]
+        image = (
+            Selector(response).css(".swiper-zoom-container").xpath("./img/@src").get()
+        )
+        item["image_urls"] = image
         if 'Model' not in itemdict or 'Brand' not in itemdict:
             yield None
         else:

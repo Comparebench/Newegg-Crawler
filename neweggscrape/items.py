@@ -41,6 +41,8 @@ class AresscrapeBoard(Item):
     socket = Field()
     chipset = Field()
     ram_type = Field()
+    newegg_sku = Field()
+    image_urls = Field()
 
 
 class AresscrapeMemory(Item):
@@ -49,9 +51,16 @@ class AresscrapeMemory(Item):
     modelname = Field()
     url = Field()
     price = Field()
-    type = Field()
+    ram_type = Field()
+    speed = Field()
+    timing = Field()
+    voltage = Field()
+    capacity = Field()
     size = Field()
     modules = Field()
+    newegg_sku = Field()
+    image_urls = Field()
+    dimm_size = Field()
 
 
 class AresscrapeGPU(Item):
@@ -78,6 +87,8 @@ class AresscrapeCase(Item):
     price = Field()
     created_ts = Field()
     updated_ts = Field()
+    newegg_sku = Field()
+    image_urls = Field()
 
 
 class AresscrapeStorage(Item):
@@ -98,6 +109,7 @@ class AresscrapeStorage(Item):
     images = Field()
     created_ts = Field()
     updated_ts = Field()
+    newegg_sku = Field()
 
 
 class AresscrapePowersupply(Item):
@@ -108,3 +120,5 @@ class AresscrapePowersupply(Item):
     price = Field()
     created_ts = Field()
     updated_ts = Field()
+    newegg_sku = Field()
+    image_urls = Field()

@@ -7,6 +7,8 @@ Once Scrapy is installed, you can scrape the following Newegg searches using `sc
 * `neweggcpu` Processors
 
 * `neweggintelboard` Intel motherboards
+* 
+* `neweggamdboard` AMD motherboards
 
 * `neweggram` Memory
 

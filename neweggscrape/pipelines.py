@@ -21,6 +21,12 @@ class AresPipeline(object):
         if spider.name == 'neweggcpu':
             upload_cpu = requests.post(self.api_url + '/cpu', data=json.dumps(dict(item)), headers={'Content-Type': 'application/json'})
             logging.info(upload_cpu.json())
+        if spider.name == 'neweggamdboard':
+            upload_cpu = requests.post(self.api_url + '/motherboard', data=json.dumps(dict(item)), headers={'Content-Type': 'application/json'})
+            logging.info(upload_cpu.json())
+        if spider.name == 'neweggram':
+            upload_cpu = requests.post(self.api_url + '/memory', data=json.dumps(dict(item)), headers={'Content-Type': 'application/json'})
+            logging.info(upload_cpu.json())
         # for data in item:
         #
         #     if item['images']:

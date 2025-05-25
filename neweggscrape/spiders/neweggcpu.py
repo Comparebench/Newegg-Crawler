@@ -43,10 +43,6 @@ class NeweggCPUSpider(Spider):
                 yield request
 
     def cpuproductpage(self, response):
-        # specs = Selector(response).xpath('//*[@id="Specs"]/fieldset')
-        # specs = Selector(response).css("#product-details").xpath("//table")[1]
-        # table_specs = Selector(response).css("#product-details").xpath("//table//tr")
-
         itemdict = {}
         table_specs = Selector(response).xpath("//table")
         for spec in table_specs.xpath("tbody/tr"):

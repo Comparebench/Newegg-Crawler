@@ -73,7 +73,7 @@ IMAGES_THUMBS = {
     'small': (50, 50), # You can add as many of these as you want
     'big': (300, 300)
 }
-
+DOWNLOAD_DELAY = 5
 IMAGES_STORE = os.getenv("IMAGES_STORE")  # 's3://your-s3-bucket/'
 DB_SERVER = os.getenv("DB_SERVER")
 DB_PORT = os.getenv("DB_PORT")
@@ -96,8 +96,8 @@ API_URL = os.getenv("API_URL")
 
 # Enable and configure HTTP caching (disabled by default)
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-#HTTPCACHE_ENABLED=True
-#HTTPCACHE_EXPIRATION_SECS=0
-#HTTPCACHE_DIR='httpcache'
-#HTTPCACHE_IGNORE_HTTP_CODES=[]
-#HTTPCACHE_STORAGE='scrapy.extensions.httpcache.FilesystemCacheStorage'
+HTTPCACHE_ENABLED=True
+HTTPCACHE_EXPIRATION_SECS=0
+HTTPCACHE_DIR='httpcache'
+HTTPCACHE_IGNORE_HTTP_CODES=[]
+HTTPCACHE_STORAGE='scrapy.extensions.httpcache.FilesystemCacheStorage'
